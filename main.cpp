@@ -1,9 +1,14 @@
+//g++ main.cpp -o main -std=c++11 -I./graphviz/include -L./graphviz/lib -lgvc -lcdt 
+//g++ main.cpp -o main -std=c++11 -I/opt/homebrew/opt/graphviz/include -L/opt/homebrew/opt/graphviz/lib -lgvc -lcdt
 #include <iostream>
 #include <stack>
 #include <string>
 #include <unordered_map>
 #include <cctype>
 #include <vector>
+#include <fstream>
+
+
 
 // Function to return precedence of operators
 int precedence(char op) {
@@ -126,43 +131,72 @@ NFA constructNFA(const std::string& postfix) {
     }
 
     return nfaStack.top();
+
+    
+
 }
 
-int main() {
-    std::cout<<"Enter the expression: ";
-    std::string infix;
-    std::cin>>infix;
-    std::string postfix = infixToPostfix(infix);
-    NFA nfa = constructNFA(postfix);
+// Function to generate DOT file from NFA
+void generate_dot(const NFA& nfa, const std::string& filename) {
+    std::ofstream dotfile(filename);
 
-    // std::cout << "Start State: " << nfa.start->id << std::endl;
-    // std::cout << "Accept State: " << nfa.accept->id << std::endl;
-    // Printing transitions (for debugging purposes)
+    if (!dotfile.is_open()) {
+        std::cerr << "Error: Could not open file " << filename << std::endl;
+        return;
+    }
+
     std::stack<State*> stateStack;
     stateStack.push(nfa.start);
     std::vector<bool> visited(stateId, false);
-    std::cout<< "digraph nfa{ \nnode[shape = point] START";
-    std::cout<<"\nnode[shape = circle] ";
-    for (int i= 0; i<nfa.accept->id; i++){
-        std::cout<< i << " ";
+
+    dotfile << "digraph nfa{\n";
+    dotfile << "node[shape = point] START\n";
+    dotfile << "node[shape = circle] ";
+
+    for (int i = 0; i < nfa.accept->id; i++) {
+        dotfile <<"q"<< i << " ";
     }
-    std::cout<<"\nnode[shape = doublecircle] "<< nfa.accept->id;
-    std::cout<<"\nSTART -> "<<nfa.start->id<<"[label = ""START""]"<<std::endl;
+    dotfile << "\n";
+    dotfile << "node[shape = doublecircle] q" << nfa.accept->id << "\n";
+    dotfile << "START -> q" << nfa.start->id << "[label = START]\n";
+
     while (!stateStack.empty()) {
         State* state = stateStack.top();
         stateStack.pop();
         if (visited[state->id]) continue;
         visited[state->id] = true;
 
-
-        
         for (auto& trans : state->transitions) {
-            std::cout<<std::endl<< state->id <<"->"<<trans.second->id <<"[ label = "<< (trans.first =='\0' ? "e" : std::string(1, trans.first))<< "]"<<std::endl;
-            // std::cout << "State " << state->id << " --" << (trans.first == '\0' ? "ε" : std::string(1, trans.first)) << "--> State " << trans.second->id << std::endl;
+            dotfile << "q" << state->id << " -> " << "q" << trans.second->id 
+                    << "[label = " << (trans.first == '\0' ? "ε" : std::string(1, trans.first)) << "]\n";
             stateStack.push(trans.second);
-
         }
     }
-    std::cout<<"\n}";
+
+    dotfile << "}\n";
+    dotfile.close();
+}
+
+// Function to generate an image from a DOT file using Graphviz
+void generate_image(const std::string& dotfile, const std::string& imagefile) {
+    std::string command = "dot -Tpng " + dotfile + " -o " + imagefile;
+    system(command.c_str());
+}
+
+int main() {
+    std::cout << "Enter the expression: ";
+    std::string infix;
+    std::cin >> infix;
+    std::string postfix = infixToPostfix(infix);
+    NFA nfa = constructNFA(postfix);
+
+    std::string dotfile = "nfa.dot";
+    std::string imagefile = "nfa.png";
+
+    generate_dot(nfa, dotfile);
+    generate_image(dotfile, imagefile);
+
+    std::cout << "NFA graph has been generated and saved as " << imagefile << std::endl;
+
     return 0;
 }

@@ -1,0 +1,10 @@
+prefix=/opt/homebrew/Cellar/graphviz/11.0.0
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: libcdt
+Description: Container DataType library
+Version: 11.0.0
+Libs: -L${libdir} -lcdt
+Cflags: -I${includedir} -I${includedir}/graphviz
