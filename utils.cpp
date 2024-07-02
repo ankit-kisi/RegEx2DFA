@@ -54,9 +54,7 @@ std::string insertDots(const std::string& input) {
     result += input[0];
 
     for (size_t i = 1; i < input.size(); ++i) {
-        if ((isalnum(input[i]) && isalnum(input[i - 1])) || 
-            (isalnum(input[i]) && input[i - 1] == ')') || 
-            (isalnum(input[i - 1]) && input[i] == '(')) {
+        if (isalnum(input[i]) && isalnum(input[i - 1]) || (isalnum(input[i]) && input[i-1] == ')' ) ||(isalnum(input[i]) && input[i-1] == '*' ) || (input[i-1]!='+'&& input[i] == '(')) {
             result += '.';
         }
         result += input[i];
