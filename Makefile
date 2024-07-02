@@ -1,28 +1,38 @@
-# Define variables
+# Compiler
 CXX = g++
+
+# Compiler flags
 CXXFLAGS = -std=c++11 -I./graphviz/include
+
+# Linker flags
 LDFLAGS = -L./graphviz/lib -lgvc -lcdt
 
-# Define the target executable
+# Source files
+SRCS = main.cpp nfa.cpp utils.cpp graphviz_utils.cpp
+
+# Header files
+HEADERS = nfa.h utils.h graphviz_utils.h
+
+# Object files
+OBJS = $(SRCS:.cpp=.o)
+
+# Executable name
 TARGET = main
 
-# Define the source files
-SOURCES = main.cpp
-
-# Define the object files
-OBJECTS = $(SOURCES:.cpp=.o)
-
-# Default target to build the executable
+# Default target
 all: $(TARGET)
 
-# Rule to build the target executable
-$(TARGET): $(OBJECTS)
-	$(CXX) $(OBJECTS) -o $(TARGET) $(LDFLAGS)
+# Link the object files to create the executable
+$(TARGET): $(OBJS)
+	$(CXX) $(OBJS) -o $(TARGET) $(LDFLAGS)
 
-# Rule to build the object files
-%.o: %.cpp
+# Compile each source file to an object file
+%.o: %.cpp $(HEADERS)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-# Rule to clean the build
+# Clean up the build files
 clean:
-	rm -f $(TARGET) $(OBJECTS)
+	rm -f $(OBJS) $(TARGET)
+
+# Phony targets
+.PHONY: all clean

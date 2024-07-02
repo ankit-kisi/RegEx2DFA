@@ -1,0 +1,18 @@
+digraph nfa{
+node[shape = point] START
+node[shape = circle] q0 q1 q2 q3 q4 q5 q6 q7 q8 
+node[shape = doublecircle] q9
+START -> q2[label = START]
+q2 -> q0[label = ε]
+q2 -> q3[label = ε]
+q3 -> q8[label = ε]
+q8 -> q4[label = ε]
+q8 -> q6[label = ε]
+q6 -> q7[label = b]
+q7 -> q9[label = ε]
+q4 -> q5[label = a]
+q5 -> q9[label = ε]
+q0 -> q1[label = a]
+q1 -> q0[label = ε]
+q1 -> q3[label = ε]
+}

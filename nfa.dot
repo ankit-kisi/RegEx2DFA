@@ -1,12 +1,14 @@
 digraph nfa{
 node[shape = point] START
-node[shape = circle] q0 q1 q2 q3 q4 
-node[shape = doublecircle] q5
-START -> q4[label = START]
-q4 -> q0[label = ε]
-q4 -> q2[label = ε]
-q2 -> q3[label = b]
-q3 -> q5[label = ε]
+node[shape = circle] q0 q1 q2 q3 q4 q5 q6 
+node[shape = doublecircle] q7
+START -> q6[label = START]
+q6 -> q0[label = ε]
+q6 -> q4[label = ε]
+q4 -> q5[label = c]
+q5 -> q7[label = ε]
 q0 -> q1[label = a]
-q1 -> q5[label = ε]
+q1 -> q2[label = ε]
+q2 -> q3[label = b]
+q3 -> q7[label = ε]
 }
