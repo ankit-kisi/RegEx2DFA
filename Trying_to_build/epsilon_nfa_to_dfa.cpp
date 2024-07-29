@@ -277,15 +277,24 @@ int main()
   cout << "---Conversion of epsilon-NFA to DFA---\n";
   cout << "---Note: Epsilon has been denoted by $ in this program---\n\n";
 
-  vector<char> states = {'A', 'B', 'C'};
+  vector<char> states = {'A', 'B', 'C','D','E','F','G','H','I','J','K','L'};
   vector<char> inputSymbols = {'0', '1'};
   unordered_map<char, unordered_map<char, vector<char>>> transitionFn = {
-      {'A', {{'0', {'A'}}, {'1', {}}, {'$', {'B'}}}},
-      {'B', {{'0', {}}, {'1', {'B'}}, {'$', {'C'}}}},
-      {'C', {{'0', {'C'}}, {'1', {'C'}}, {'$', {}}}},
+      {'A', {{'0', {'B'}}, {'1', {}}, {'$', {}}}},
+      {'B', {{'0', {}}, {'1', {}}, {'$', {'C'}}}},
+      {'C', {{'0', {'D'}}, {'1', {}}, {'$', {}}}},
+      {'D', {{'0', {}}, {'1', {}}, {'$', {'J'}}}},
+      {'E', {{'0', {}}, {'1', {'F'}}, {'$', {}}}},
+      {'F', {{'0', {}}, {'1', {}}, {'$', {'G'}}}},
+      {'G', {{'0', {}}, {'1', {'H'}}, {'$', {}}}},
+      {'H', {{'0', {}}, {'1', {}}, {'$', {'J'}}}},
+      {'I', {{'0', {}}, {'1', {}}, {'$', {'A','E'}}}},
+      {'J', {{'0', {}}, {'1', {}}, {'$', {'I','L'}}}},
+      {'K', {{'0', {}}, {'1', {}}, {'$', {'I','L'}}}},
+      {'L', {{'0', {}}, {'1', {}}, {'$', {}}}},
   };
-  char startState = 'A';
-  vector<char> finalStates = {'C'};
+  char startState = 'K';
+  vector<char> finalStates = {'L'};
 
   NFA nfa(states, inputSymbols, transitionFn, startState, finalStates);
   printNFA(nfa);
