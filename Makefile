@@ -21,7 +21,7 @@ HEADERS = $(INC_DIR)/nfa.h $(INC_DIR)/utils.h $(INC_DIR)/graphviz_utils.h $(INC_
 OBJS = $(SRCS:$(SRC_DIR)/%.cpp=$(SRC_DIR)/%.o)
 
 # Executable name
-TARGET = main
+TARGET = RegEx2DFA
 
 # Default target
 all: $(TARGET)
