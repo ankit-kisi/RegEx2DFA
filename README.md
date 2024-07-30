@@ -6,7 +6,7 @@
 
 ## Installation
 
-[Documentation](https://linktodocumentation)
+
 
 To get started, follow the instructions below to install the necessary dependencies and set up the project.
 
