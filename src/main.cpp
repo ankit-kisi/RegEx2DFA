@@ -4,6 +4,7 @@
 #include "dfa.h"
 #include "graphviz_utils.h"
 #include "nfa.h"
+#include "print_utils.h"
 #include "utils.h"
 
 int main() {
@@ -27,15 +28,14 @@ int main() {
   // Reading NFA for converting to DFA
   NFA nfa_for_dfa = NFA::readNFAforDFAconversion(nfa);
 
-  // nfa_for_dfa.print();
-
   // Printing the NFA
-  DFA::printNFA(nfa_for_dfa);
+  printNFA(nfa_for_dfa);
+
   // Converting the NFA to DFA
   DFA dfa = DFA::convertNFAtoDFA(nfa_for_dfa);
 
   // Printing the DFA
-  DFA::printDFA(dfa);
+  printDFA(dfa);
 
   std::string dotfile_dfa = "dfa.dot";
   std::string imagefile_dfa = "dfa.png";

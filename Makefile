@@ -2,19 +2,23 @@
 CXX = g++
 
 # Compiler flags
-CXXFLAGS = -std=c++11 -I./graphviz/include
+CXXFLAGS = -std=c++11 -I./include
 
 # Linker flags
 LDFLAGS = -L./graphviz/lib -lgvc -lcdt
 
+# Source and header directories
+SRC_DIR = src
+INC_DIR = include
+
 # Source files
-SRCS = main.cpp nfa.cpp utils.cpp graphviz_utils.cpp dfa.cpp
+SRCS = $(SRC_DIR)/main.cpp $(SRC_DIR)/nfa.cpp $(SRC_DIR)/utils.cpp $(SRC_DIR)/graphviz_utils.cpp $(SRC_DIR)/dfa.cpp $(SRC_DIR)/print_utils.cpp
 
 # Header files
-HEADERS = nfa.h utils.h graphviz_utils.h dfa.h
+HEADERS = $(INC_DIR)/nfa.h $(INC_DIR)/utils.h $(INC_DIR)/graphviz_utils.h $(INC_DIR)/dfa.h $(INC_DIR)/print_utils.h
 
 # Object files
-OBJS = $(SRCS:.cpp=.o)
+OBJS = $(SRCS:$(SRC_DIR)/%.cpp=$(SRC_DIR)/%.o)
 
 # Executable name
 TARGET = main
@@ -27,12 +31,13 @@ $(TARGET): $(OBJS)
 	$(CXX) $(OBJS) -o $(TARGET) $(LDFLAGS)
 
 # Compile each source file to an object file
-%.o: %.cpp $(HEADERS)
+$(SRC_DIR)/%.o: $(SRC_DIR)/%.cpp $(HEADERS)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 # Clean up the build files
 clean:
 	rm -f $(OBJS) $(TARGET)
+	rm -f *.dot *.png
 
 # Phony targets
 .PHONY: all clean

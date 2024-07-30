@@ -49,11 +49,6 @@ void generate_dot_nfa(const NFA& nfa, const std::string& filename) {
   dotfile.close();
 }
 
-void generate_image(const std::string& dotfile, const std::string& imagefile) {
-  std::string command = "dot -Tpng " + dotfile + " -o " + imagefile;
-  system(command.c_str());
-}
-
 void generate_dot_dfa(DFA& dfa, const std::string& filename) {
   std::ofstream file(filename);
   if (!file.is_open()) {
@@ -104,4 +99,30 @@ void generate_dot_dfa(DFA& dfa, const std::string& filename) {
 
   std::cout << "DFA graph description has been written to " << filename
             << std::endl;
+}
+
+// Function to generate a Graphviz image and open it immediately
+void generate_image(const std::string& dotfile, const std::string& imagefile) {
+  // Generate the image using the Graphviz dot command
+  std::string command = "dot -Tpng " + dotfile + " -o " + imagefile;
+  int result = system(command.c_str());
+
+  if (result == 0) {
+// Open the image using platform-specific commands
+#if defined(_WIN32) || defined(_WIN64)
+    std::string openCommand = "start " + imagefile;
+#elif defined(__APPLE__)
+    std::string openCommand = "open " + imagefile;
+#elif defined(__linux__)
+    std::string openCommand = "xdg-open " + imagefile;
+#else
+    std::cerr << "Unsupported platform. Cannot open the image file."
+              << std::endl;
+    return;
+#endif
+
+    system(openCommand.c_str());
+  } else {
+    std::cerr << "Failed to generate the image using dot command." << std::endl;
+  }
 }
