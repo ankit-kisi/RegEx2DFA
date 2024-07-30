@@ -7,6 +7,7 @@
 #include <stack>
 #include <unordered_set>
 #include <vector>
+#include <algorithm>
 
 int stateId = 0;  // Definition of stateId
 
