@@ -1,9 +1,0 @@
-digraph DFA {
-    node [shape = point] START;
-    node [shape = circle] q0 ;
-    node [shape = doublecircle] ;
-    START -> q0 [label="START"];
-    q0 -> q0 [label="a"];
-    q0 -> q0 [label="b"];
-    q0 -> q0 [label="S"];
-}
