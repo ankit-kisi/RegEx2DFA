@@ -22,13 +22,13 @@ class DFA {
       int startState, const std::vector<int>& finalStates);
 
   // Function declarations
-  static std::unordered_map<char, std::unordered_set<char>> findeClosure(
+  static std::unordered_map<int, std::unordered_set<int>> findeClosure(
       NFA& nfa);
 
   static void printeClosure(
-      NFA& nfa, std::unordered_map<char, std::unordered_set<char>>& eClosure);
+      NFA& nfa, std::unordered_map<int, std::unordered_set<int>>& eClosure);
   static void printMappings(
-      std::unordered_map<int, std::unordered_set<char>>& mappedStates);
+      std::unordered_map<int, std::unordered_set<int>>& mappedStates);
   static DFA convertNFAtoDFA(NFA& nfa);
   static void printNFA(NFA& nfa);
   static void printDFA(DFA& dfa);

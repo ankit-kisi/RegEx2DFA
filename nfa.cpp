@@ -135,6 +135,10 @@ NFA NFA::readNFAFromDotFile(const NFA& nfa) {
     }
   }
 
+  // Remove all '$' characters
+  inputSymbols.erase(std::remove(inputSymbols.begin(), inputSymbols.end(), '$'),
+                     inputSymbols.end());
+
   // Using an unordered_set to remove duplicates
   std::unordered_set<char> uniqueElements(inputSymbols.begin(),
                                           inputSymbols.end());
@@ -145,35 +149,35 @@ NFA NFA::readNFAFromDotFile(const NFA& nfa) {
   return NFA(states, inputSymbols, transitionFn, startState, finalStates);
 }
 
-void NFA::print() const {
-  std::cout << "States: ";
-  for (int state : states) {
-    std::cout << state << " ";
-  }
-  std::cout << std::endl;
+// void NFA::print() const {
+//   std::cout << "States: ";
+//   for (int state : states) {
+//     std::cout << state << " ";
+//   }
+//   std::cout << std::endl;
 
-  std::cout << "Input Symbols: ";
-  for (char symbol : inputSymbols) {
-    std::cout << symbol << " ";
-  }
-  std::cout << std::endl;
+//   std::cout << "Input Symbols: ";
+//   for (char symbol : inputSymbols) {
+//     std::cout << symbol << " ";
+//   }
+//   std::cout << std::endl;
 
-  std::cout << "Transitions: " << std::endl;
-  for (const auto& fromState : transitionFn) {
-    for (const auto& trans : fromState.second) {
-      std::cout << fromState.first << " --" << trans.first << "--> ";
-      for (int toState : trans.second) {
-        std::cout << toState << " ";
-      }
-      std::cout << std::endl;
-    }
-  }
+//   std::cout << "Transitions: " << std::endl;
+//   for (const auto& fromState : transitionFn) {
+//     for (const auto& trans : fromState.second) {
+//       std::cout << fromState.first << " --" << trans.first << "--> ";
+//       for (int toState : trans.second) {
+//         std::cout << toState << " ";
+//       }
+//       std::cout << std::endl;
+//     }
+//   }
 
-  std::cout << "Start State: " << startState << std::endl;
+//   std::cout << "Start State: " << startState << std::endl;
 
-  std::cout << "Final States: ";
-  for (int finalState : finalStates) {
-    std::cout << finalState << " ";
-  }
-  std::cout << std::endl;
-}
+//   std::cout << "Final States: ";
+//   for (int finalState : finalStates) {
+//     std::cout << finalState << " ";
+//   }
+//   std::cout << std::endl;
+// }

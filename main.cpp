@@ -42,7 +42,7 @@ int main() {
   std::string imagefile_dfa = "dfa.png";
 
   generate_dot_dfa(dfa, dotfile_dfa);
-  // generate_image(dotfile_dfa, imagefile_dfa);
+  generate_image(dotfile_dfa, imagefile_dfa);
 
   std::cout << "DFA graph has been generated and saved as " << imagefile_dfa
             << std::endl;
