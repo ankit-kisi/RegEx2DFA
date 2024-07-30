@@ -25,13 +25,12 @@ int main() {
             << std::endl;
 
   // Reading NFA for converting to DFA
-  NFA nfa_for_dfa = NFA::readNFAFromDotFile(nfa);
+  NFA nfa_for_dfa = NFA::readNFAforDFAconversion(nfa);
 
   // nfa_for_dfa.print();
 
   // Printing the NFA
   DFA::printNFA(nfa_for_dfa);
-
   // Converting the NFA to DFA
   DFA dfa = DFA::convertNFAtoDFA(nfa_for_dfa);
 
