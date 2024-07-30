@@ -25,13 +25,7 @@ class DFA {
   static std::unordered_map<int, std::unordered_set<int>> findeClosure(
       NFA& nfa);
 
-  static void printeClosure(
-      NFA& nfa, std::unordered_map<int, std::unordered_set<int>>& eClosure);
-  static void printMappings(
-      std::unordered_map<int, std::unordered_set<int>>& mappedStates);
   static DFA convertNFAtoDFA(NFA& nfa);
-  static void printNFA(NFA& nfa);
-  static void printDFA(DFA& dfa);
 };
 
 #endif  // DFA_H
