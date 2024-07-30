@@ -11,7 +11,7 @@ A brief description of the project.
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/RegEx2DFA.git](https://github.com/ankit-kisi/RegEx2DFA.git
+   git clone https://github.com/ankit-kisi/RegEx2DFA.git
    cd RegEx2DFA
    ```
 
