@@ -8,10 +8,10 @@ CXXFLAGS = -std=c++11 -I./graphviz/include
 LDFLAGS = -L./graphviz/lib -lgvc -lcdt
 
 # Source files
-SRCS = main.cpp nfa.cpp utils.cpp graphviz_utils.cpp
+SRCS = main.cpp nfa.cpp utils.cpp graphviz_utils.cpp dfa.cpp
 
 # Header files
-HEADERS = nfa.h utils.h graphviz_utils.h
+HEADERS = nfa.h utils.h graphviz_utils.h dfa.h
 
 # Object files
 OBJS = $(SRCS:.cpp=.o)
