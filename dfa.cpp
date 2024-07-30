@@ -156,7 +156,9 @@ void DFA::printNFA(NFA &nfa) {
   std::cout << std::setw(width) << "$" << std::endl;
   for (int srcState : nfa.states) {
     std::cout << std::setw(width) << srcState;
-    for (char symbol : nfa.inputSymbols) {
+    std::vector<char> symbols = nfa.inputSymbols;
+    symbols.push_back('$');
+    for (char symbol : symbols) {
       std::vector<int> destStates = nfa.transitionFn[srcState][symbol];
       std::string str = "";
       for (int state : destStates) {

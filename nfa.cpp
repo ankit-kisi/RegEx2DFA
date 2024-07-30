@@ -12,8 +12,10 @@ int stateId = 0;  // Definition of stateId
 
 State::State(int id) : id(id) {}
 
+// for thompson's construction
 NFA::NFA(State* start, State* accept) : start(start), accept(accept) {}
 
+// for nfa to dfa conversion
 NFA::NFA(
     const std::vector<int>& states, const std::vector<char>& inputSymbols,
     const std::unordered_map<int, std::unordered_map<char, std::vector<int>>>
