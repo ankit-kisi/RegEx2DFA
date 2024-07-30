@@ -21,18 +21,18 @@ DFA::DFA(
       startState(startState),
       finalStates(finalStates) {}
 
-std::unordered_map<char, std::unordered_set<char>> DFA::findeClosure(NFA &nfa) {
-  std::unordered_map<char, std::unordered_set<char>> eClosure;
-  for (char c : nfa.states) {
-    std::queue<char> q;
-    std::unordered_set<char> visited;
+std::unordered_map<int, std::unordered_set<int>> DFA::findeClosure(NFA &nfa) {
+  std::unordered_map<int, std::unordered_set<int>> eClosure;
+  for (int c : nfa.states) {
+    std::queue<int> q;
+    std::unordered_set<int> visited;
     q.push(c);
     visited.insert(c);
     while (!q.empty()) {
-      char srcState = q.front();
+      int srcState = q.front();
       q.pop();
       std::vector<int> destStates = nfa.transitionFn[srcState]['$'];
-      for (char destState : destStates) {
+      for (int destState : destStates) {
         if (visited.find(destState) == visited.end()) {
           visited.insert(destState);
           q.push(destState);
@@ -47,18 +47,18 @@ std::unordered_map<char, std::unordered_set<char>> DFA::findeClosure(NFA &nfa) {
 }
 
 void DFA::printeClosure(
-    NFA &nfa, std::unordered_map<char, std::unordered_set<char>> &eClosure) {
+    NFA &nfa, std::unordered_map<int, std::unordered_set<int>> &eClosure) {
   std::cout << "Epsilon Closures are:";
-  for (char state : nfa.states) {
+  for (int state : nfa.states) {
     std::cout << "\nState " << state << ": ";
-    for (char c : eClosure[state]) {
+    for (int c : eClosure[state]) {
       std::cout << c << " ";
     }
   }
 }
 
 void DFA::printMappings(
-    std::unordered_map<int, std::unordered_set<char>> &mappedStates) {
+    std::unordered_map<int, std::unordered_set<int>> &mappedStates) {
   std::cout << "\n\nMapped states are:\n";
   std::cout << "DFA == NFA\n";
   int n = mappedStates.size();
@@ -72,15 +72,14 @@ void DFA::printMappings(
 }
 
 DFA DFA::convertNFAtoDFA(NFA &nfa) {
-  std::unordered_map<char, std::unordered_set<char>> eClosure =
-      findeClosure(nfa);
+  std::unordered_map<int, std::unordered_set<int>> eClosure = findeClosure(nfa);
   printeClosure(nfa, eClosure);
 
   DFA dfa;
   dfa.inputSymbols = nfa.inputSymbols;
   dfa.startState = 0;
   int noOfDFAStates = 1;
-  std::unordered_map<int, std::unordered_set<char>> mappedStates;
+  std::unordered_map<int, std::unordered_set<int>> mappedStates;
   std::queue<int> q;
   q.push(0);
   mappedStates[0] = eClosure[nfa.startState];
@@ -89,12 +88,12 @@ DFA DFA::convertNFAtoDFA(NFA &nfa) {
     int dfaState = q.front();
     q.pop();
     for (char symbol : nfa.inputSymbols) {
-      std::unordered_set<char> reach;
-      std::unordered_set<char> nfaStates = mappedStates[dfaState];
-      for (char srcState : nfaStates) {
+      std::unordered_set<int> reach;
+      std::unordered_set<int> nfaStates = mappedStates[dfaState];
+      for (int srcState : nfaStates) {
         std::vector<int> destStates = nfa.transitionFn[srcState][symbol];
-        for (char destState : destStates) {
-          std::unordered_set<char> s = eClosure[destState];
+        for (int destState : destStates) {
+          std::unordered_set<int> s = eClosure[destState];
           reach.insert(s.begin(), s.end());
         }
       }
@@ -140,7 +139,7 @@ void DFA::printNFA(NFA &nfa) {
   int width = 6;
   std::cout << "Given NFA:\n";
   std::cout << "States: ";
-  for (char c : nfa.states) {
+  for (int c : nfa.states) {
     std::cout << c << ", ";
   }
 
@@ -155,19 +154,19 @@ void DFA::printNFA(NFA &nfa) {
     std::cout << std::setw(width) << c;
   }
   std::cout << std::setw(width) << "$" << std::endl;
-  for (char srcState : nfa.states) {
+  for (int srcState : nfa.states) {
     std::cout << std::setw(width) << srcState;
     for (char symbol : nfa.inputSymbols) {
       std::vector<int> destStates = nfa.transitionFn[srcState][symbol];
       std::string str = "";
-      for (char state : destStates) {
-        str += state;
+      for (int state : destStates) {
+        str += std::to_string(state);
       }
       std::cout << std::setw(width) << str;
     }
     std::vector<int> destStates = nfa.transitionFn[srcState]['$'];
     std::string str = "";
-    for (char state : destStates) {
+    for (int state : destStates) {
       str += state;
     }
     std::cout << std::setw(width) << str << std::endl;
@@ -175,7 +174,7 @@ void DFA::printNFA(NFA &nfa) {
 
   std::cout << "Start State: " << nfa.startState;
   std::cout << "\nFinal States: ";
-  for (char c : nfa.finalStates) {
+  for (int c : nfa.finalStates) {
     std::cout << c << ", ";
   }
   std::cout << "\b\b \n\n";
