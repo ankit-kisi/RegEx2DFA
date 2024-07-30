@@ -44,9 +44,9 @@ class NFA {
   static NFA constructNFA(const std::string& postfix);
 
   // Convert NFA to DFA-like structure
-  static NFA readNFAFromDotFile(const NFA& nfa);
+  static NFA readNFAforDFAconversion(const NFA& nfa);
 
-  void print() const;
+  //   void print() const;
 
   // Other methods if needed
 };

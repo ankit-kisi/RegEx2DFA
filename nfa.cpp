@@ -86,7 +86,7 @@ NFA NFA::constructNFA(const std::string& postfix) {
   return nfaStack.top();
 }
 
-NFA NFA::readNFAFromDotFile(const NFA& nfa) {
+NFA NFA::readNFAforDFAconversion(const NFA& nfa) {
   std::vector<int> states;
   std::vector<char> inputSymbols;
   std::unordered_map<int, std::unordered_map<char, std::vector<int>>>
