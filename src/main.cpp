@@ -5,15 +5,15 @@
 #include "graphviz_utils.h"
 #include "nfa.h"
 #include "print_utils.h"
-#include "utils.h"
+#include "regEx.h"
 
 int main() {
-  std::cout << "Enter the expression: ";
-  std::string infix;
-  std::getline(std::cin, infix);
+  regEx x;
+  std::string infix = x.inputFromTerminal();
 
-  std::string processedInfix = insertDots(infix);
-  std::string postfix = infixToPostfix(processedInfix);
+  std::string processedInfix = regEx::insertDots(infix);
+  std::string postfix = regEx::infixToPostfix(processedInfix);
+
   NFA nfa = NFA::constructNFA(postfix);
 
   std::string dotfile_nfa = "nfa.dot";
