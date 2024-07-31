@@ -4,6 +4,7 @@
 #include <iostream>
 #include <stack>
 #include <string>
+#include <stdexcept>
 
 std::string regEx::inputFromTerminal() {
   std::cout << "Enter a regular expression: ";
@@ -11,6 +12,39 @@ std::string regEx::inputFromTerminal() {
 
   return infix;
 }
+
+// Function to check if the string contains only allowed characters
+bool isValidCharacter(char c) {
+    return std::isalnum(c) || c == '+' || c == '*' || c == '(' || c == ')';
+}
+
+// Function to validate the regular expression string and check parentheses
+void checkRegularExpression(const std::string& pattern) {
+    std::stack<char> parenthesesStack;
+
+    // Check if all characters are valid
+    for (char c : pattern) {
+        if (!isValidCharacter(c)) {
+            throw std::invalid_argument("Invalid character in the regular expression");
+        }
+
+        // Parenthesis checking
+        if (c == '(') {
+            parenthesesStack.push(c);
+        } else if (c == ')') {
+            if (parenthesesStack.empty() || parenthesesStack.top() != '(') {
+                throw std::invalid_argument("Unmatched parenthesis");
+            }
+            parenthesesStack.pop();
+        }
+    }
+
+    // Ensure all opened parentheses are closed
+    if (!parenthesesStack.empty()) {
+        throw std::invalid_argument("Unmatched parenthesis");
+    }
+}
+
 
 int regEx::precedence(char op) {
   if (op == '+') return 1;
