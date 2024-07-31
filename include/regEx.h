@@ -18,6 +18,6 @@ class regEx {
   static std::string infixToPostfix(const std::string& exp);
   static std::string insertDots(const std::string& input);
 };
-bool isValidCharacter(char c);
+// bool isValidCharacter(char c);
 void checkRegularExpression(const std::string& pattern);
 #endif  // UTILS_H

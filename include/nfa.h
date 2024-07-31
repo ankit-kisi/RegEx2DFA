@@ -45,10 +45,6 @@ class NFA {
 
   // Convert NFA to DFA-like structure
   static NFA readNFAforDFAconversion(const NFA& nfa);
-
-  //   void print() const;
-
-  // Other methods if needed
 };
 
 // External declaration of stateId
