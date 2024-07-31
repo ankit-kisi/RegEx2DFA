@@ -10,7 +10,14 @@
 int main() {
   regEx x;
   std::string infix = x.inputFromTerminal();
-
+  
+  try {
+      checkRegularExpression(infix); 
+  } catch (const std::invalid_argument& e) {
+      std::cerr << e.what() << std::endl;
+      std::exit(EXIT_FAILURE);  // Terminate the program
+  }
+  
   std::string processedInfix = regEx::insertDots(infix);
   std::string postfix = regEx::infixToPostfix(processedInfix);
 
