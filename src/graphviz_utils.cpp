@@ -48,6 +48,9 @@ void generate_dot_nfa(const NFA& nfa, const std::string& filename) {
 
   dotfile << "}\n";
   dotfile.close();
+
+  std::cout << "NFA graph description has been written to " << filename
+            << std::endl;
 }
 
 void generate_dot_dfa(DFA& dfa, const std::string& filename) {
@@ -121,6 +124,23 @@ void generate_image(const std::string& dotfile, const std::string& imagefile) {
               << std::endl;
     return;
 #endif
+    // Find the position of the dot
+    size_t dotPosition = imagefile.find('.');
+
+    // Check if the dot was found
+    if (dotPosition != std::string::npos) {
+      // Extract the substring before the dot
+      std::string graphName = imagefile.substr(0, dotPosition);
+
+      // Capitalize the extracted substring
+      std::transform(graphName.begin(), graphName.end(), graphName.begin(),
+                     ::toupper);
+
+      std::cout << graphName << " graph has been generated and saved as "
+                << imagefile << std::endl;
+    } else {
+      std::cout << "Dot not found in the string." << std::endl;
+    }
 
     system(openCommand.c_str());
   } else {

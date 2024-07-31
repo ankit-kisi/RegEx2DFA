@@ -1,0 +1,12 @@
+digraph NFA {
+node [shape = point] START
+node [shape = circle] q0 q1 q2 q3 q4 
+node [shape = doublecircle] q5
+START -> q4 [label = " START"]
+q4 -> q0 [label = " ε"]
+q4 -> q2 [label = " ε"]
+q2 -> q3 [label = " b"]
+q3 -> q5 [label = " ε"]
+q0 -> q1 [label = " a"]
+q1 -> q5 [label = " ε"]
+}

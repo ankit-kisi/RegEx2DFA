@@ -8,6 +8,9 @@
 #include "regEx.h"
 
 int main() {
+  std::cout << "" << std::endl;
+  std::cout << "---Welcome to ReEx2DFA---" << std::endl;
+  std::cout << "" << std::endl;
   regEx x;
   std::string infix = x.inputFromTerminal();
   
@@ -29,9 +32,6 @@ int main() {
   generate_dot_nfa(nfa, dotfile_nfa);
   generate_image(dotfile_nfa, imagefile_nfa);
 
-  std::cout << "NFA graph has been generated and saved as " << imagefile_nfa
-            << std::endl;
-
   // Reading NFA for converting to DFA
   NFA nfa_for_dfa = NFA::readNFAforDFAconversion(nfa);
 
@@ -49,9 +49,6 @@ int main() {
 
   generate_dot_dfa(dfa, dotfile_dfa);
   generate_image(dotfile_dfa, imagefile_dfa);
-
-  std::cout << "DFA graph has been generated and saved as " << imagefile_dfa
-            << std::endl;
 
   return 0;
 }
