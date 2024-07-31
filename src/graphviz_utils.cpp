@@ -16,19 +16,20 @@ void generate_dot_nfa(const NFA& nfa, const std::string& filename) {
   }
 
   std::stack<State*> stateStack;
+
   stateStack.push(nfa.start);
   std::vector<bool> visited(nfa.accept->id + 1, false);
 
-  dotfile << "digraph nfa{\n";
-  dotfile << "node[shape = point] START\n";
-  dotfile << "node[shape = circle] ";
+  dotfile << "digraph NFA {\n";
+  dotfile << "node [shape = point] START\n";
+  dotfile << "node [shape = circle] ";
 
   for (int i = 0; i < nfa.accept->id; i++) {
     dotfile << "q" << i << " ";
   }
   dotfile << "\n";
-  dotfile << "node[shape = doublecircle] q" << nfa.accept->id << "\n";
-  dotfile << "START -> q" << nfa.start->id << "[label = START]\n";
+  dotfile << "node [shape = doublecircle] q" << nfa.accept->id << "\n";
+  dotfile << "START -> q" << nfa.start->id << " [label = \" START\"]\n";
 
   while (!stateStack.empty()) {
     State* state = stateStack.top();
@@ -38,8 +39,8 @@ void generate_dot_nfa(const NFA& nfa, const std::string& filename) {
 
     for (auto& trans : state->transitions) {
       dotfile << "q" << state->id << " -> q" << trans.second->id
-              << "[label = \""
-              << (trans.first == '\0' ? "$" : std::string(1, trans.first))
+              << " [label = \" "
+              << (trans.first == '\0' ? "ε" : std::string(1, trans.first))
               << "\"]\n";
       stateStack.push(trans.second);
     }
@@ -57,7 +58,7 @@ void generate_dot_dfa(DFA& dfa, const std::string& filename) {
   }
 
   file << "digraph DFA {\n";
-  file << "node [shape = point] START;\n";
+  file << "node [shape = point] START\n";
 
   // Print the regular states
   file << "node [shape = circle] ";
@@ -68,17 +69,17 @@ void generate_dot_dfa(DFA& dfa, const std::string& filename) {
       file << "q" << state << " ";
     }
   }
-  file << ";\n";
+  file << "\n";
 
   // Print the final states
   file << "node [shape = doublecircle] ";
   for (int finalState : dfa.finalStates) {
     file << "q" << finalState << " ";
   }
-  file << ";\n";
+  file << "\n";
 
   // Print the start state
-  file << "START -> q" << dfa.startState << " [label=\"START\"];\n";
+  file << "START -> q" << dfa.startState << " [label = \" START\"];\n";
 
   // Print the transitions
   for (int srcState : dfa.states) {
@@ -87,7 +88,7 @@ void generate_dot_dfa(DFA& dfa, const std::string& filename) {
       if (seenSymbols.find(symbol) == seenSymbols.end()) {
         int destState = dfa.transitionFn[srcState][symbol];
         if (destState != -1) {
-          file << "q" << srcState << " -> q" << destState << " [label=\""
+          file << "q" << srcState << " -> q" << destState << " [label = \" "
                << symbol << "\"];\n";
           seenSymbols.insert(symbol);
         }

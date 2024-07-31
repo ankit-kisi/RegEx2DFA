@@ -1,5 +1,6 @@
 #include "nfa.h"
 
+#include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <queue>
@@ -7,7 +8,6 @@
 #include <stack>
 #include <unordered_set>
 #include <vector>
-#include <algorithm>
 
 int stateId = 0;  // Definition of stateId
 
@@ -96,9 +96,12 @@ NFA NFA::readNFAforDFAconversion(const NFA& nfa) {
 
   std::stack<State*> stateStack;
 
+  // Push the start state to the stack
   stateStack.push(nfa.start);
+  // Vector to keep track of visited states
   std::vector<bool> visited(nfa.accept->id + 1, false);
 
+  // all states are stored in the states vector
   for (int i = 0; i <= nfa.accept->id; i++) {
     states.push_back(i);
   }
@@ -119,7 +122,6 @@ NFA NFA::readNFAforDFAconversion(const NFA& nfa) {
       int toState = trans.second->id;
 
       // Check if the state exists in the outer map; if not, insert it
-
       transitionFn.emplace(fromState,
                            std::unordered_map<char, std::vector<int>>());
 

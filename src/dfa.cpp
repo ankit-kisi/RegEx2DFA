@@ -34,6 +34,8 @@ std::unordered_map<int, std::unordered_set<int>> DFA::findeClosure(NFA &nfa) {
       q.pop();
       std::vector<int> destStates = nfa.transitionFn[srcState]['$'];
       for (int destState : destStates) {
+        // Check if the destination state is already visited
+        // if not found it will return end of the set
         if (visited.find(destState) == visited.end()) {
           visited.insert(destState);
           q.push(destState);
