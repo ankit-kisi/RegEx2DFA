@@ -3,48 +3,98 @@
 #include <cctype>
 #include <iostream>
 #include <stack>
-#include <string>
 #include <stdexcept>
+#include <string>
 
 std::string regEx::inputFromTerminal() {
-  std::cout << "Enter a regular expression: ";
-  std::getline(std::cin, infix);
+  bool isValidInput = false;
+
+  while (!isValidInput) {
+    std::cout << "\nEnter a regular expression: ";
+    std::getline(std::cin, infix);
+
+    try {
+      checkRegularExpression(infix);
+      isValidInput = true;
+    } catch (const std::invalid_argument& e) {
+      std::cerr << "\033[31m" << "\nError: " << e.what() << "\033[0m"
+                << std::endl;
+    }
+  }
 
   return infix;
 }
 
-// Function to check if the string contains only allowed characters
-bool isValidCharacter(char c) {
-    return std::isalnum(c) || c == '+' || c == '*' || c == '(' || c == ')';
-}
-
 // Function to validate the regular expression string and check parentheses
-void checkRegularExpression(const std::string& pattern) {
-    std::stack<char> parenthesesStack;
+void checkRegularExpression(const std::string& input) {
+  if (input.empty()) {
+    throw std::invalid_argument("Regular expression cannot be empty");
+  }
 
-    // Check if all characters are valid
-    for (char c : pattern) {
-        if (!isValidCharacter(c)) {
-            throw std::invalid_argument("Invalid character in the regular expression");
-        }
+  std::stack<char> parenthesesStack;
 
-        // Parenthesis checking
-        if (c == '(') {
-            parenthesesStack.push(c);
-        } else if (c == ')') {
-            if (parenthesesStack.empty() || parenthesesStack.top() != '(') {
-                throw std::invalid_argument("Unmatched parenthesis");
-            }
-            parenthesesStack.pop();
-        }
+  // Variable to keep track of the last character for invalid sequences
+  char lastChar = '\0';
+
+  for (size_t i = 0; i < input.length(); ++i) {
+    char c = input[i];
+
+    // Check for valid characters
+    if (!isalnum(c) && c != '+' && c != '*' && c != '(' && c != ')') {
+      throw std::invalid_argument(
+          "Invalid character in the regular expression");
     }
 
-    // Ensure all opened parentheses are closed
-    if (!parenthesesStack.empty()) {
+    // Check for invalid sequences
+    if (c == '+') {
+      if (i == 0 || i == input.length() - 1) {
+        throw std::invalid_argument(
+            "Operator '+' cannot be at the start or end of the regular "
+            "expression");
+      }
+      if (lastChar == '+') {
+        throw std::invalid_argument(
+            "Invalid sequence: " + std::string(1, lastChar) +
+            std::string(1, c));
+      }
+    }
+
+    if (c == '*') {
+      if (i == 0) {
+        throw std::invalid_argument(
+            "Operator '*' cannot be at the start of the regular expression");
+      }
+      if (lastChar == '*' || lastChar == '+') {
+        throw std::invalid_argument(
+            "Invalid sequence: " + std::string(1, lastChar) +
+            std::string(1, c));
+      }
+    }
+
+    // Parenthesis checking
+    if (c == '(') {
+      parenthesesStack.push(c);
+    } else if (c == ')') {
+      if (parenthesesStack.empty() || parenthesesStack.top() != '(') {
         throw std::invalid_argument("Unmatched parenthesis");
-    }
-}
+      }
+      parenthesesStack.pop();
 
+      // Check for empty parentheses pair
+      if (i > 0 && input[i - 1] == '(') {
+        throw std::invalid_argument("Empty parentheses pair found");
+      }
+    }
+
+    // Update last character
+    lastChar = c;
+  }
+
+  // Ensure all opened parentheses are closed
+  if (!parenthesesStack.empty()) {
+    throw std::invalid_argument("Unmatched parenthesis");
+  }
+}
 
 int regEx::precedence(char op) {
   if (op == '+') return 1;
