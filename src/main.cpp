@@ -1,4 +1,5 @@
 #include <iostream>
+#include <limits>
 #include <string>
 
 #include "dfa.h"
@@ -76,10 +77,9 @@ int main() {
     }
     // close the png files
     wm->closeWindows(imageFiles);
-
-    std::cout << "\033[32m" << "\n---Thank you for using ReEx2DFA---"
-              << "\033[0m" << std::endl;
   }
+  std::cout << "\033[32m" << "\n---Thank you for using ReEx2DFA---"
+            << "\033[0m" << std::endl;
 
   return 0;
 }

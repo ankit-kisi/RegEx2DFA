@@ -26,7 +26,7 @@ std::string regEx::inputFromTerminal() {
 }
 
 // Function to validate the regular expression string and check parentheses
-void checkRegularExpression(const std::string& input) {
+void regEx::checkRegularExpression(const std::string& input) {
   if (input.empty()) {
     throw std::invalid_argument("Regular expression cannot be empty");
   }
