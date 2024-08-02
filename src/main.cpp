@@ -36,10 +36,7 @@ int main() {
     printDFA(dfa);
 
     std::string dotfile_nfa = "nfa.dot";
-    std::string imagefile_nfa = "nfa.png";
-
     std::string dotfile_dfa = "dfa.dot";
-    std::string imagefile_dfa = "dfa.png";
 
     generate_dot_nfa(nfa, dotfile_nfa);
     generate_dot_dfa(dfa, dotfile_dfa);

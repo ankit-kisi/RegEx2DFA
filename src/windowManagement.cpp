@@ -6,14 +6,15 @@
 
 #if defined(_WIN32) || defined(_WIN64)
 void WindowsWindowManagement::openFile(const std::string& filePath) {
-  std::string command = "start " + filePath;
+  std::string command = "start \"\" \"" + filePath + "\"";
   std::system(command.c_str());
 }
 
 void WindowsWindowManagement::closeWindows(
     const std::vector<std::string>& titles) {
   for (const auto& title : titles) {
-    HWND hwnd = FindWindow(NULL, title.c_str());
+    std::wstring wTitle(title.begin(), title.end());
+    HWND hwnd = FindWindowW(NULL, wTitle.c_str());
     if (hwnd) {
       SendMessage(hwnd, WM_CLOSE, 0, 0);
     } else {
@@ -22,6 +23,7 @@ void WindowsWindowManagement::closeWindows(
     }
   }
 }
+
 #endif
 
 #if defined(__APPLE__)
