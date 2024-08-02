@@ -1,7 +1,0 @@
-digraph NFA {
-node [shape = point] START
-node [shape = circle] q0 
-node [shape = doublecircle] q1
-START -> q0 [label = " START"]
-q0 -> q1 [label = " a"]
-}
