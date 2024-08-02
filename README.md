@@ -43,22 +43,22 @@ sudo pacman -S graphviz
 Download the Graphviz installer from [Graphviz's official website](https://graphviz.org/download/).
 Run the installer and follow the installation instructions.
 
+**Make sure you select:**
+
+```bash
+🔘 Add Graphviz to the system PATH for current user
+```
+
+![Alt text](https://global.discourse-cdn.com/graphviz/original/1X/754680b6a7f66af5318b6deed62a3e8f5c0d34f2.png)
+
 ### 2. Verify Installation
 
-#### macOS/Linux
+#### macOS/Linux/Windows
 
 To verify that Graphviz was installed correctly, you can check the version of the dot tool (which is part of Graphviz):
 
 ```bash
 dot -V
-```
-
-#### Windows
-
-To verify that Graphviz was installed correctly,
-
-```bash
-
 ```
 
 ### 3. Find the Path of Graphviz
@@ -89,40 +89,50 @@ find graphviz
 
 #### Windows
 
-The installation path is usually `C:\Program Files\Graphviz\bin`.
+The default installation path for Graphviz is usually: `"C:\Program Files\Graphviz"`.
 
-```bash
+If you selected a different path during installation, use that path instead.
 
-```
+![Alt text](https://global.discourse-cdn.com/graphviz/original/1X/ac7f10c21d821a1aa78b4eaf4ac253cda2b775bc.png)
 
 ### 4. Add the Path to the Makefile
 
 Open the `Makefile` in your project directory and set the GRAPHVIZ_PATH variable to the path where Graphviz is installed.
 
-on macOS
+#### macOs
 
 ```makefile
 GRAPHVIZ_PATH = /opt/homebrew/opt/graphviz
 ```
 
-on Linux
+#### Linux
 
 ```makefile
 GRAPHVIZ_PATH = /usr
 ```
 
-or on Windows:
+#### Windows
+
+You should enclose the path in double quotes.
 
 ```makefile
-GRAPHVIZ_PATH = C:/Program Files/Graphviz/bin
+GRAPHVIZ_PATH = "C:\Program Files\Graphviz"
 ```
 
 ### 4. Build the Project
+
+#### macOS/Linux
 
 In your terminal, navigate to the project directory and run:
 
 ```bash
 make
+```
+
+#### Windows
+
+```bash
+mingw32-make
 ```
 
 ### 5. Run the Project

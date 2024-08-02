@@ -10,19 +10,34 @@ void WindowsWindowManagement::openFile(const std::string& filePath) {
   std::system(command.c_str());
 }
 
-void WindowsWindowManagement::closeWindows(
-    const std::vector<std::string>& titles) {
-  for (const auto& title : titles) {
-    std::wstring wTitle(title.begin(), title.end());
-    HWND hwnd = FindWindowW(NULL, wTitle.c_str());
-    if (hwnd) {
-      SendMessage(hwnd, WM_CLOSE, 0, 0);
-    } else {
-      std::cerr << "Window with title '" << title << "' not found."
-                << std::endl;
+// Callback function to find and close windows by title
+BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam) {
+  std::vector<std::string>* titles =
+      reinterpret_cast<std::vector<std::string>*>(lParam);
+  char windowTitle[256];
+
+  if (GetWindowTextA(hwnd, windowTitle, sizeof(windowTitle))) {
+    std::string title(windowTitle);
+    for (const auto& targetTitle : *titles) {
+      if (title.find(targetTitle) != std::string::npos) {
+        // Send the close message
+        SendMessage(hwnd, WM_CLOSE, 0, 0);
+        return TRUE;  // Continue enumeration
+      }
     }
   }
+  return TRUE;  // Continue enumeration
 }
+
+void WindowsWindowManagement::closeWindows(
+    const std::vector<std::string>& titles) {
+  // Enumerate all top-level windows and close those matching the titles
+  EnumWindows(EnumWindowsProc, reinterpret_cast<LPARAM>(&titles));
+
+  std::cout << "Attempted to close specified windows." << std::endl;
+}
+
+#endif
 
 #endif
 
