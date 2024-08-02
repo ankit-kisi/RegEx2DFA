@@ -1,0 +1,38 @@
+# Ignore object files and executables
+*.o
+*.exe
+*.out
+*.dll
+*.so
+*.dylib
+
+# Ignore build directories (adjust or remove if not used)
+build/
+
+# Ignore system-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore compiled library files
+*.lib
+*.a
+
+# Ignore logs and temporary files
+*.log
+*.tmp
+
+# Ignore IDE specific files
+.idea/
+.vscode/
+*.code-workspace
+
+# Ignore Graphviz output files
+*.dot
+*.png
+
+# Ignore the final binary
+main
+
+# Ignore any files or directories named "debug" or "release"
+debug/
+release/
