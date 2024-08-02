@@ -39,8 +39,6 @@ void WindowsWindowManagement::closeWindows(
 
 #endif
 
-#endif
-
 #if defined(__APPLE__)
 void MacOSWindowManagement::openFile(const std::string& filePath) {
   std::string command = "open " + filePath;
