@@ -2,7 +2,7 @@
 CXX = g++
 
 #graphviz path
-GRAPHVIZ_PATH = /opt/homebrew/Cellar/graphviz/12.0.0
+GRAPHVIZ_PATH = /path/to/graphviz
 
 # Compiler flags
 CXXFLAGS = -std=c++11 -I$(GRAPHVIZ_PATH)/include -I./include

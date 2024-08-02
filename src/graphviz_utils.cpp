@@ -111,41 +111,8 @@ void generate_image(const std::string& dotfile, const std::string& imagefile) {
   std::string command = "dot -Tpng " + dotfile + " -o " + imagefile;
   int result = system(command.c_str());
 
-  if (result == 0) {
-    // // Open the image using platform-specific commands
-    // #if defined(_WIN32) || defined(_WIN64)
-    //     std::string openCommand = "start " + imagefile;
-    // #elif defined(__APPLE__)
-    //     std::string openCommand = "open " + imagefile;
-    // #elif defined(__linux__)
-    //     std::string openCommand = "xdg-open " + imagefile;
-    // #else
-    //     std::cerr << "Unsupported platform. Cannot open the image file."
-    //               << std::endl;
-    //     return;
-    // #endif
-    //     // Find the position of the dot
-    //     size_t dotPosition = imagefile.find('.');
-
-    //     // Check if the dot was found
-    //     if (dotPosition != std::string::npos) {
-    //       // Extract the substring before the dot
-    //       std::string graphName = imagefile.substr(0, dotPosition);
-
-    //       // Capitalize the extracted substring
-    //       std::transform(graphName.begin(), graphName.end(),
-    //       graphName.begin(),
-    //                      ::toupper);
-
-    //       std::cout << graphName << " graph has been generated and saved as "
-    //                 << imagefile << std::endl;
-    //     } else {
-    //       std::cout << "Dot not found in the string." << std::endl;
-    //     }
-
-    //     system(openCommand.c_str());
-    //   } else {
-    //     std::cerr << "Failed to generate the image using dot command." <<
-    //     std::endl;
+  if (result != 0) {
+    std::cerr << "Error: Could not generate image " << imagefile << std::endl;
+    return;
   }
 }
