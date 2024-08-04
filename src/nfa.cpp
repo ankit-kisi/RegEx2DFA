@@ -7,54 +7,64 @@
 #include <unordered_set>
 #include <vector>
 
-int stateId = 0;  // Definition of stateId
+#include "state.h"
 
-State::State(int id) : id(id) {}
+// Initialize the static member
+int stateId = 0;
 
-// for thompson's construction
-NFA::NFA(State* start, State* accept) : start(start), accept(accept) {}
+// Constructor for Thompson's Construction
+NFA::NFA(State* start, State* accept)
+    : Automata({}, {}, -1, {}), start(start), accept(accept) {}
 
-// for nfa to dfa conversion
+// Constructor for NFA to DFA Conversion
 NFA::NFA(
     const std::vector<int>& states, const std::vector<char>& inputSymbols,
-    const std::unordered_map<int, std::unordered_map<char, std::vector<int>>>
+    const std::unordered_map<int, std::unordered_map<char, std::vector<int>>>&
         transitionFn,
     int startState, const std::vector<int>& finalStates)
-    : states(states),
-      inputSymbols(inputSymbols),
-      transitionFn(transitionFn),
-      startState(startState),
-      finalStates(finalStates) {}
+    : Automata(states, inputSymbols, startState, finalStates),
+      transitionFn(transitionFn) {}
+
+// getter functions
+
+State* NFA::getStart() const { return start; }
+
+State* NFA::getAccept() const { return accept; }
+
+const std::unordered_map<int, std::unordered_map<char, std::vector<int>>>&
+NFA::getTransitionFn() const {
+  return transitionFn;
+};
 
 NFA NFA::basic(char c) {
   State* start = new State(stateId++);
   State* accept = new State(stateId++);
-  start->transitions.push_back({c, accept});
+  start->addTransition(c, accept);
   return NFA(start, accept);
 }
 
 NFA NFA::unionNFA(NFA a, NFA b) {
   State* start = new State(stateId++);
   State* accept = new State(stateId++);
-  start->transitions.push_back({'\0', a.start});
-  start->transitions.push_back({'\0', b.start});
-  a.accept->transitions.push_back({'\0', accept});
-  b.accept->transitions.push_back({'\0', accept});
+  start->addTransition('\0', a.getStart());
+  start->addTransition('\0', b.getStart());
+  a.getAccept()->addTransition('\0', accept);
+  b.getAccept()->addTransition('\0', accept);
   return NFA(start, accept);
 }
 
 NFA NFA::concatNFA(NFA a, NFA b) {
-  a.accept->transitions.push_back({'\0', b.start});
-  return NFA(a.start, b.accept);
+  a.getAccept()->addTransition('\0', b.getStart());
+  return NFA(a.getStart(), b.getAccept());
 }
 
 NFA NFA::kleeneStarNFA(NFA a) {
   State* start = new State(stateId++);
   State* accept = new State(stateId++);
-  start->transitions.push_back({'\0', a.start});
-  start->transitions.push_back({'\0', accept});
-  a.accept->transitions.push_back({'\0', a.start});
-  a.accept->transitions.push_back({'\0', accept});
+  start->addTransition('\0', a.getStart());
+  start->addTransition('\0', accept);
+  a.getAccept()->addTransition('\0', a.getStart());
+  a.getAccept()->addTransition('\0', accept);
   return NFA(start, accept);
 }
 
@@ -81,45 +91,41 @@ NFA NFA::constructNFA(const std::string& postfix) {
       nfaStack.push(kleeneStarNFA(a));
     }
   }
-  stateId = 0;  // Reset the stateId in case the user wants to enter another
-                // regular expression
+  stateId = 0;  // Reset the stateId in case the user wants to enter
+                // another regular expression
+
   return nfaStack.top();
 }
 
-NFA NFA::readNFAforDFAconversion(const NFA& nfa) {
-  std::vector<int> states;
-  std::vector<char> inputSymbols;
-  std::unordered_map<int, std::unordered_map<char, std::vector<int>>>
-      transitionFn;
-  int startState;  // Default value for startState
-  std::vector<int> finalStates;
-
+NFA NFA::readNFAforDFAconversion() {
   std::stack<State*> stateStack;
 
   // Push the start state to the stack
-  stateStack.push(nfa.start);
+  stateStack.push(getStart());
   // Vector to keep track of visited states
-  std::vector<bool> visited(nfa.accept->id + 1, false);
+  std::vector<bool> visited(getAccept()->getId() + 1, false);
 
   // all states are stored in the states vector
-  for (int i = 0; i <= nfa.accept->id; i++) {
+  for (int i = 0; i <= getAccept()->getId(); i++) {
     states.push_back(i);
   }
 
-  finalStates.push_back(nfa.accept->id);
-  startState = nfa.start->id;
+  finalStates.push_back(getAccept()->getId());
+  startState = getStart()->getId();
 
   while (!stateStack.empty()) {
     State* state = stateStack.top();
     stateStack.pop();
-    if (visited[state->id]) continue;
-    visited[state->id] = true;
+    if (visited[state->getId()]) continue;
+    visited[state->getId()] = true;
 
-    for (auto& trans : state->transitions) {
-      int fromState = state->id;
+    auto& transitions = state->getTransitions();
+
+    for (auto& trans : transitions) {
+      int fromState = state->getId();
       char inputSymbol = (trans.first == '\0' ? '$' : trans.first);
 
-      int toState = trans.second->id;
+      int toState = trans.second->getId();
 
       // Check if the state exists in the outer map; if not, insert it
       transitionFn.emplace(fromState,
@@ -139,7 +145,6 @@ NFA NFA::readNFAforDFAconversion(const NFA& nfa) {
       stateStack.push(trans.second);
     }
   }
-
   // Remove all '$' characters
   inputSymbols.erase(std::remove(inputSymbols.begin(), inputSymbols.end(), '$'),
                      inputSymbols.end());

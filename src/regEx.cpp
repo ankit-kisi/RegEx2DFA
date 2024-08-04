@@ -6,28 +6,26 @@
 #include <stdexcept>
 #include <string>
 
-std::string regEx::inputFromTerminal() {
-  bool isValidInput = false;
+void regEx::inputFromTerminal() {
+  bool isValidinfix = false;
 
-  while (!isValidInput) {
+  while (!isValidinfix) {
     std::cout << "\nEnter a regular expression: ";
     std::getline(std::cin, infix);
 
     try {
-      checkRegularExpression(infix);
-      isValidInput = true;
+      checkRegularExpression();
+      isValidinfix = true;
     } catch (const std::invalid_argument& e) {
       std::cerr << "\033[31m" << "\nError: " << e.what() << "\033[0m"
                 << std::endl;
     }
   }
-
-  return infix;
 }
 
 // Function to validate the regular expression string and check parentheses
-void regEx::checkRegularExpression(const std::string& input) {
-  if (input.empty()) {
+void regEx::checkRegularExpression() {
+  if (infix.empty()) {
     throw std::invalid_argument("Regular expression cannot be empty");
   }
 
@@ -36,8 +34,8 @@ void regEx::checkRegularExpression(const std::string& input) {
   // Variable to keep track of the last character for invalid sequences
   char lastChar = '\0';
 
-  for (size_t i = 0; i < input.length(); ++i) {
-    char c = input[i];
+  for (size_t i = 0; i < infix.length(); ++i) {
+    char c = infix[i];
 
     // Check for valid characters
     if (!isalnum(c) && c != '+' && c != '*' && c != '(' && c != ')') {
@@ -47,7 +45,7 @@ void regEx::checkRegularExpression(const std::string& input) {
 
     // Check for invalid sequences
     if (c == '+') {
-      if (i == 0 || i == input.length() - 1) {
+      if (i == 0 || i == infix.length() - 1) {
         throw std::invalid_argument(
             "Operator '+' cannot be at the start or end of the regular "
             "expression");
@@ -81,7 +79,7 @@ void regEx::checkRegularExpression(const std::string& input) {
       parenthesesStack.pop();
 
       // Check for empty parentheses pair
-      if (i > 0 && input[i - 1] == '(') {
+      if (i > 0 && infix[i - 1] == '(') {
         throw std::invalid_argument("Empty parentheses pair found");
       }
     }
@@ -103,11 +101,10 @@ int regEx::precedence(char op) {
   return 0;
 }
 
-std::string regEx::infixToPostfix(const std::string& exp) {
+void regEx::infixToPostfix() {
   std::stack<char> operators;
-  std::string postfix;
 
-  for (char ch : exp) {
+  for (char ch : dottedInfix) {
     if (isalnum(ch)) {
       postfix += ch;
     } else if (ch == '(') {
@@ -132,31 +129,22 @@ std::string regEx::infixToPostfix(const std::string& exp) {
     postfix += operators.top();
     operators.pop();
   }
-
-  return postfix;
 }
 
 // work is left here to recognize a*(a+b) => a*.(a+b)
-std::string regEx::insertDots(const std::string& input) {
-  if (input.empty()) {
-    return input;
-  }
+void regEx::insertDots() {
+  // Reserve enough space to avoid frequent reallocations
+  dottedInfix.reserve(infix.size() * 2);
 
-  std::string result;
-  result.reserve(input.size() *
-                 2);  // Reserve enough space to avoid frequent reallocations
+  dottedInfix += infix[0];
 
-  result += input[0];
-
-  for (size_t i = 1; i < input.size(); ++i) {
-    if (isalnum(input[i]) && isalnum(input[i - 1]) ||
-        (isalnum(input[i]) && input[i - 1] == ')') ||
-        (isalnum(input[i]) && input[i - 1] == '*') ||
-        (input[i - 1] != '+' && input[i] == '(')) {
-      result += '.';
+  for (size_t i = 1; i < infix.size(); ++i) {
+    if (isalnum(infix[i]) && isalnum(infix[i - 1]) ||
+        (isalnum(infix[i]) && infix[i - 1] == ')') ||
+        (isalnum(infix[i]) && infix[i - 1] == '*') ||
+        (infix[i - 1] != '+' && infix[i] == '(')) {
+      dottedInfix += '.';
     }
-    result += input[i];
+    dottedInfix += infix[i];
   }
-
-  return result;
 }

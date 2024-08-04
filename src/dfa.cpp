@@ -7,24 +7,32 @@
 #include <unordered_set>
 #include <vector>
 
+#include "nfa.h"
 #include "print_utils.h"
 
-// Constructor definition
+// Constructor
+
 DFA::DFA(
-    const std::vector<int> &states, const std::vector<char> &inputSymbols,
-    const std::unordered_map<int, std::unordered_map<char, int>> &transitionFn,
-    int startState, const std::vector<int> &finalStates)
-    : states(states),
-      inputSymbols(inputSymbols),
-      transitionFn(transitionFn),
-      startState(startState),
-      finalStates(finalStates) {}
+    const std::vector<int>& states, const std::vector<char>& inputSymbols,
+    const std::unordered_map<int, std::unordered_map<char, int>>& transitionFn,
+    int startState, const std::vector<int>& finalStates)
+    : Automata(states, inputSymbols, startState, finalStates),
+      transitionFn(transitionFn) {
+  // Additional initialization if needed
+}
+
+// Getter function
+const std::unordered_map<int, std::unordered_map<char, int>>&
+DFA::getTransitionFn() const {
+  return transitionFn;
+}
 
 // Function to find epsilon closure
 
-std::unordered_map<int, std::unordered_set<int>> DFA::findeClosure(NFA &nfa) {
+std::unordered_map<int, std::unordered_set<int>> DFA::findeClosure(
+    const NFA& nfa) {
   std::unordered_map<int, std::unordered_set<int>> eClosure;
-  for (int c : nfa.states) {
+  for (int c : nfa.getStates()) {
     std::queue<int> q;
     std::unordered_set<int> visited;
     q.push(c);
@@ -32,7 +40,9 @@ std::unordered_map<int, std::unordered_set<int>> DFA::findeClosure(NFA &nfa) {
     while (!q.empty()) {
       int srcState = q.front();
       q.pop();
-      std::vector<int> destStates = nfa.transitionFn[srcState]['$'];
+      std::unordered_map<int, std::unordered_map<char, std::vector<int>>>
+          transitionFn = nfa.getTransitionFn();
+      std::vector<int> destStates = transitionFn[srcState]['$'];
       for (int destState : destStates) {
         // Check if the destination state is already visited
         // if not found it will return end of the set
@@ -51,27 +61,30 @@ std::unordered_map<int, std::unordered_set<int>> DFA::findeClosure(NFA &nfa) {
 
 // Function to convert NFA to DFA
 
-DFA DFA::convertNFAtoDFA(NFA &nfa) {
-  std::unordered_map<int, std::unordered_set<int>> eClosure = findeClosure(nfa);
+DFA DFA::convertNFAtoDFA(const NFA& nfa) {
+  DFA dfa;
+  std::unordered_map<int, std::unordered_set<int>> eClosure =
+      dfa.findeClosure(nfa);
   printeClosure(nfa, eClosure);
 
-  DFA dfa;
-  dfa.inputSymbols = nfa.inputSymbols;
+  dfa.inputSymbols = nfa.getInputSymbols();
   dfa.startState = 0;
   int noOfDFAStates = 1;
   std::unordered_map<int, std::unordered_set<int>> mappedStates;
   std::queue<int> q;
   q.push(0);
-  mappedStates[0] = eClosure[nfa.startState];
+  mappedStates[0] = eClosure[nfa.getStartState()];
 
   while (!q.empty()) {
     int dfaState = q.front();
     q.pop();
-    for (char symbol : nfa.inputSymbols) {
+    for (char symbol : nfa.getInputSymbols()) {
       std::unordered_set<int> reach;
       std::unordered_set<int> nfaStates = mappedStates[dfaState];
       for (int srcState : nfaStates) {
-        std::vector<int> destStates = nfa.transitionFn[srcState][symbol];
+        std::unordered_map<int, std::unordered_map<char, std::vector<int>>>
+            transitionFn = nfa.getTransitionFn();
+        std::vector<int> destStates = transitionFn[srcState][symbol];
         for (int destState : destStates) {
           std::unordered_set<int> s = eClosure[destState];
           reach.insert(s.begin(), s.end());
@@ -101,9 +114,9 @@ DFA DFA::convertNFAtoDFA(NFA &nfa) {
     dfa.states.push_back(i);
   }
 
-  auto &states1 = nfa.finalStates;
+  auto& states1 = nfa.getFinalStates();
   for (int i = 0; i < noOfDFAStates; i++) {
-    auto &states2 = mappedStates[i];
+    auto& states2 = mappedStates[i];
     for (auto c1 : states1) {
       if (states2.find(c1) != states2.end()) {
         dfa.finalStates.push_back(i);

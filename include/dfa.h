@@ -4,28 +4,31 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include "automata.h"
 #include "nfa.h"
 
-class DFA {
- public:
-  std::vector<int> states;
-  std::vector<char> inputSymbols;
+class DFA : public Automata {
+ private:
   std::unordered_map<int, std::unordered_map<char, int>> transitionFn;
-  int startState;
-  std::vector<int> finalStates;
 
-  // constructor
-  DFA() = default;
+ public:
+  // Constructor
+  DFA() : Automata({}, {}, 0, {}), transitionFn() {
+    // Default initialization of Automata base class and transitionFn
+  }
   DFA(const std::vector<int>& states, const std::vector<char>& inputSymbols,
       const std::unordered_map<int, std::unordered_map<char, int>>&
           transitionFn,
       int startState, const std::vector<int>& finalStates);
 
-  // Function declarations
-  static std::unordered_map<int, std::unordered_set<int>> findeClosure(
-      NFA& nfa);
+  // Getter functions
+  const std::unordered_map<int, std::unordered_map<char, int>>&
+  getTransitionFn() const;
 
-  static DFA convertNFAtoDFA(NFA& nfa);
+  // Function declarations
+  std::unordered_map<int, std::unordered_set<int>> findeClosure(const NFA& nfa);
+
+  DFA convertNFAtoDFA(const NFA& nfa);
 };
 
 #endif  // DFA_H

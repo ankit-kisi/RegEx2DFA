@@ -12,7 +12,7 @@
 // Function declarations
 void printNFA(NFA &nfa);
 void printDFA(DFA &dfa);
-void printeClosure(NFA &nfa,
+void printeClosure(const NFA &nfa,
                    std::unordered_map<int, std::unordered_set<int>> &eClosure);
 void printMappings(
     std::unordered_map<int, std::unordered_set<int>> &mappedStates);
