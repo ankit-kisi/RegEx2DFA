@@ -17,28 +17,30 @@ void generate_dot_nfa(const NFA& nfa, const std::string& filename) {
 
   std::stack<State*> stateStack;
 
-  stateStack.push(nfa.start);
-  std::vector<bool> visited(nfa.accept->id + 1, false);
+  stateStack.push(nfa.getStart());
+  std::vector<bool> visited(nfa.getAccept()->getId() + 1, false);
 
   dotfile << "digraph NFA {\n";
   dotfile << "node [shape = point] START\n";
   dotfile << "node [shape = circle] ";
 
-  for (int i = 0; i < nfa.accept->id; i++) {
+  for (int i = 0; i < nfa.getAccept()->getId(); i++) {
     dotfile << "q" << i << " ";
   }
   dotfile << "\n";
-  dotfile << "node [shape = doublecircle] q" << nfa.accept->id << "\n";
-  dotfile << "START -> q" << nfa.start->id << " [label = \" START\"]\n";
+  dotfile << "node [shape = doublecircle] q" << nfa.getAccept()->getId()
+          << "\n";
+  dotfile << "START -> q" << nfa.getStart()->getId()
+          << " [label = \" START\"]\n";
 
   while (!stateStack.empty()) {
     State* state = stateStack.top();
     stateStack.pop();
-    if (visited[state->id]) continue;
-    visited[state->id] = true;
+    if (visited[state->getId()]) continue;
+    visited[state->getId()] = true;
 
-    for (auto& trans : state->transitions) {
-      dotfile << "q" << state->id << " -> q" << trans.second->id
+    for (auto& trans : state->getTransitions()) {
+      dotfile << "q" << state->getId() << " -> q" << trans.second->getId()
               << " [label = \" "
               << (trans.first == '\0' ? "ε" : std::string(1, trans.first))
               << "\"]\n";
@@ -65,10 +67,10 @@ void generate_dot_dfa(DFA& dfa, const std::string& filename) {
 
   // Print the regular states
   file << "node [shape = circle] ";
-  for (int state : dfa.states) {
+  for (int state : dfa.getStates()) {
     // Only print if it's not a final state
-    if (std::find(dfa.finalStates.begin(), dfa.finalStates.end(), state) ==
-        dfa.finalStates.end()) {
+    if (std::find(dfa.getFinalStates().begin(), dfa.getFinalStates().end(),
+                  state) == dfa.getFinalStates().end()) {
       file << "q" << state << " ";
     }
   }
@@ -76,20 +78,21 @@ void generate_dot_dfa(DFA& dfa, const std::string& filename) {
 
   // Print the final states
   file << "node [shape = doublecircle] ";
-  for (int finalState : dfa.finalStates) {
+  for (int finalState : dfa.getFinalStates()) {
     file << "q" << finalState << " ";
   }
   file << "\n";
 
-  // Print the start state
-  file << "START -> q" << dfa.startState << " [label = \" START\"];\n";
+  // Print the getStart() state
+  file << "START -> q" << dfa.getStartState() << " [label = \" START\"];\n";
 
-  // Print the transitions
-  for (int srcState : dfa.states) {
+  // Print the getTransitions()
+  for (int srcState : dfa.getStates()) {
     std::unordered_set<char> seenSymbols;
-    for (char symbol : dfa.inputSymbols) {
+    for (char symbol : dfa.getInputSymbols()) {
       if (seenSymbols.find(symbol) == seenSymbols.end()) {
-        int destState = dfa.transitionFn[srcState][symbol];
+        auto transitionFn = dfa.getTransitionFn();
+        int destState = transitionFn[srcState][symbol];
         if (destState != -1) {
           file << "q" << srcState << " -> q" << destState << " [label = \" "
                << symbol << "\"];\n";

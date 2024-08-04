@@ -15,22 +15,27 @@ int main() {
   bool isRunning = true;
 
   while (isRunning) {
-    regEx x;
-    std::string infix = x.inputFromTerminal();
+    regEx exp;
+    exp.inputFromTerminal();
 
-    std::string processedInfix = regEx::insertDots(infix);
-    std::string postfix = regEx::infixToPostfix(processedInfix);
+    exp.insertDots();
+    exp.infixToPostfix();
 
-    NFA nfa = NFA::constructNFA(postfix);
+    std::string postfix = exp.getPostfix();
+
+    NFA nfa, nfa_for_dfa;
+
+    nfa = nfa.constructNFA(postfix);
 
     // Reading NFA for converting to DFA
-    NFA nfa_for_dfa = NFA::readNFAforDFAconversion(nfa);
+    nfa_for_dfa = nfa.readNFAforDFAconversion();
 
     // Printing the NFA
     printNFA(nfa_for_dfa);
 
     // Converting the NFA to DFA
-    DFA dfa = DFA::convertNFAtoDFA(nfa_for_dfa);
+    DFA dfa;
+    dfa = dfa.convertNFAtoDFA(nfa_for_dfa);
 
     // Printing the DFA
     printDFA(dfa);

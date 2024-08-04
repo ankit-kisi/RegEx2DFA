@@ -15,10 +15,10 @@ SRC_DIR = src
 INC_DIR = include
 
 # Source files
-SRCS = $(SRC_DIR)/main.cpp $(SRC_DIR)/nfa.cpp $(SRC_DIR)/regEx.cpp $(SRC_DIR)/graphviz_utils.cpp $(SRC_DIR)/dfa.cpp $(SRC_DIR)/print_utils.cpp $(SRC_DIR)/windowManagement.cpp
+SRCS = $(SRC_DIR)/main.cpp $(SRC_DIR)/state.cpp $(SRC_DIR)/automata.cpp $(SRC_DIR)/nfa.cpp $(SRC_DIR)/regEx.cpp $(SRC_DIR)/graphviz_utils.cpp $(SRC_DIR)/dfa.cpp $(SRC_DIR)/print_utils.cpp $(SRC_DIR)/windowManagement.cpp
 
 # Header files
-HEADERS = $(INC_DIR)/nfa.h $(INC_DIR)/regEx.h $(INC_DIR)/graphviz_utils.h $(INC_DIR)/dfa.h $(INC_DIR)/print_utils.h $(INC_DIR)/windowManagement.h
+HEADERS = $(INC_DIR)/state.h $(INC_DIR)/automata.h $(INC_DIR)/nfa.h $(INC_DIR)/regEx.h $(INC_DIR)/graphviz_utils.h $(INC_DIR)/dfa.h $(INC_DIR)/print_utils.h $(INC_DIR)/windowManagement.h
 
 # Object files
 OBJS = $(SRCS:$(SRC_DIR)/%.cpp=$(SRC_DIR)/%.o)

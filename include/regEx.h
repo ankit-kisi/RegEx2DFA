@@ -6,18 +6,23 @@
 class regEx {
  private:
   std::string infix;
+  std::string dottedInfix;
+  std::string postfix;
 
  public:
   // Constructor
   regEx() {}
 
-  // Method to take input from the terminal
-  std::string inputFromTerminal();
-  void checkRegularExpression(const std::string& pattern);
+  // Public getter function to access postfix
+  std::string getPostfix() const { return postfix; }
 
-  static int precedence(char op);
-  static std::string infixToPostfix(const std::string& exp);
-  static std::string insertDots(const std::string& input);
+  // Method to take input from the terminal
+  void inputFromTerminal();
+  void checkRegularExpression();
+
+  int precedence(char op);
+  void infixToPostfix();
+  void insertDots();
 };
 
 #endif  // UTILS_H
